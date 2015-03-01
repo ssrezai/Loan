@@ -10,6 +10,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>RealCustomerServlet</servlet-name>
-        <url-pattern>/main.webapp.servlets.RealCustomerServlet</url-pattern>
+        <url-pattern>/RealCustomerServlet</url-pattern>
     </servlet-mapping>
 </web-app>
