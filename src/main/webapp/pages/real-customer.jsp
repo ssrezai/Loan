@@ -8,16 +8,78 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="../style/customer-management-style.css">
     <title>
         عملیات مشتری حقیقی
     </title>
+    <script>
+        function formValidation() {
+            var bool;
+            var national_code = document.forms["insert_form"]["national_code"].value;
+            var first_name = document.forms["insert_form"]["first_name"].value;
+            var last_name = document.forms["insert_form"]["last_name"].value;
+            var father_name = document.forms["insert_form"]["father_name"].value;
+            if (national_code == null || national_code == "" ||
+                    first_name == null || first_name == "" ||
+                    last_name == null || last_name == "" ||
+                    father_name == null || father_name == "") {
+                alert("پر کردن تمام فیلدها اجباری است. مجددا تلاش نمایید.");
+                bool=false;
+
+            }
+            else
+            {
+                var nationalCode= document.forms["insert_form"]["national_code"].value;
+                bool=checkNationalCodeDigitCount(nationalCode)
+            }
+            return bool;
+        }
+        function checkNationalCodeDigitCount(nationalCode)
+        {
+            var bool;
+            if(isNaN(nationalCode)|| nationalCode.length!=10)
+            {
+                alert("کد ملی 10 رقم دارد. مجددا تلاش نمایید.");
+                bool= false;
+            }
+            else
+            {
+                bool=checkNationalCodeValidation(nationalCode);
+            }
+            return bool;
+        }
+        function checkNationalCodeValidation(nationalCode)
+        {
+            var sum=0;
+            for(var index=0;index<10;index++)
+            {
+                var position=index+1;
+                sum=sum+(Number(nationalCode.substr(index,1))*(position))
+            }
+            var divisor=11;
+            var remaining=sum % divisor;
+            var rightDigit=Number(nationalCode.substr(10,1));
+            var rightDigitComplement= 11- rightDigit;
+            if(remaining==rightDigit||remaining==rightDigitComplement)
+            {
+                return true;
+            }
+            else
+            {
+                alert("کد ملی وارد شده معتبر نیست")
+                return false;
+            }
+        }
+
+
+    </script>
+    <script src="../javaScripts/form-validation.js" type="text/javascript"></script>
 </head>
 <body>
 <div>
 
-<form action="/RealCustomerServlet" method="GET">
+<form name="insert_form" onsubmit="return formValidation()" action="/RealCustomerServlet" method="GET">
     <fieldset dir="rtl">
         <input type="hidden" name="type" value="real">
 
@@ -162,7 +224,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="ثبت"></td>
+                <td><input type="submit" name="submit" value="ثبت"></td>
                 <td></td>
             </tr>
         </table>
@@ -171,7 +233,7 @@
 </form>
 
 
-<form action="/RealCustomerServlet" method="post">
+<form name="search_form" action="/RealCustomerServlet" method="post">
     <fieldset dir="rtl">
         <legend> جستجوی مشتری حقیقی</legend>
         <input type="hidden" name="type" value="real">
@@ -210,7 +272,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="جستجو"></td>
+                <td><input type="submit" name="search" value="جستجو"></td>
                 <td></td>
             </tr>
         </table>
