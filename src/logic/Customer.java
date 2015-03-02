@@ -5,13 +5,13 @@ package logic;
  * Created by DOTIN SCHOOL 3 on 3/1/2015.
  */
 public class Customer {
-    public  String customerID;
+    public  int customerID;
 
-    public String getCustomerID() {
+    public int getCustomerID() {
         return customerID;
     }
 
-    public void setCustomerID(String customerID) {
+    public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }
 }

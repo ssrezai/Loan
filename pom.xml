@@ -7,7 +7,19 @@
   <version>1.0-SNAPSHOT</version>
   <name>Loan Maven Webapp</name>
   <url>http://maven.apache.org</url>
+    <repositories>
+        <repository>
+            <id>JBoss repository</id>
+            <url>http://repository.jboss.com/maven2/</url>
+        </repository>
+    </repositories>
   <dependencies>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-entitymanager</artifactId>
+          <version>4.3.8.Final</version>
+
+      </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -20,11 +32,15 @@
           <version>6.0</version>
           <scope>provided</scope>
       </dependency>
-      <!--<dependency>-->
-          <!--<groupId>javax.servlet</groupId>-->
-          <!--<artifactId>servlet-api</artifactId>-->
-          <!--<version>2.5</version>-->
-      <!--</dependency>-->
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-core</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.34</version>
+      </dependency>
   </dependencies>
   <build>
     <finalName>Loan</finalName>
