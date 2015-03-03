@@ -31,7 +31,7 @@
             else
             {
                 var nationalCode= document.forms["insert_form"]["national_code"].value;
-                bool=checkNationalCodeDigitCount(nationalCode)
+                bool=checkNationalCodeDigitCount(nationalCode);
             }
             return bool;
         }
@@ -55,7 +55,7 @@
             for(var index=0;index<10;index++)
             {
                 var position=index+1;
-                sum=sum+(Number(nationalCode.substr(index,1))*(position))
+                sum = sum + (Number(nationalCode.substr(index, 1)) * (position));
             }
             var divisor=11;
             var remaining=sum % divisor;
@@ -67,7 +67,7 @@
             }
             else
             {
-                alert("کد ملی وارد شده معتبر نیست")
+                alert("کد ملی وارد شده معتبر نیست");
                 return false;
             }
         }
@@ -79,7 +79,7 @@
 <body>
 <div>
 
-<form name="insert_form" onsubmit="return formValidation()" action="/RealCustomerServlet" method="GET">
+<form name="insert_form" onsubmit="return formValidation()" action="/RealCustomerServlet" method="post">
     <fieldset dir="rtl">
         <input type="hidden" name="type" value="real">
 

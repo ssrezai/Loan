@@ -8,7 +8,7 @@
             <generator class="native"/>
         </id>
         <joined-subclass name="logic.RealCustomer" table="real_customer">
-            <key column="customerId"/>
+            <key column="fk_customerId"></key>
 
             <property name="firstName" type="string" column="first_name"></property>
             <property name="lastName" type="string" column="last_name"></property>
