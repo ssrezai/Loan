@@ -20,6 +20,11 @@
     <p>
         شماره مشتری:
         <%=request.getAttribute("customerId")%>
+        <% String st= (String) request.getAttribute("customerId");%>
+        <% int i=Integer.parseInt(st);%>
+        <% if(i>50)
+        %>
+        <script>window.alert("  f  ")</script>
     </p>
 
     <P>

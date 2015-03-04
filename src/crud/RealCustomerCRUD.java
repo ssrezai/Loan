@@ -1,6 +1,5 @@
 package crud;
 
-import logic.DuplicateCustomerException;
 import logic.RealCustomer;
 import logic.SessionFactoryUtil;
 import org.hibernate.Query;
@@ -17,14 +16,13 @@ public class RealCustomerCRUD {
     public static void AddRealCustomer(RealCustomer realCustomer) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         try {
-            Transaction tx =  session.beginTransaction();
+            Transaction tx = session.beginTransaction();
             System.out.println(realCustomer.getNationalCode());
             System.out.println(realCustomer.getFirstName());
             System.out.println(realCustomer.getLastName());
             System.out.println(realCustomer.getCustomerID());
             session.save(realCustomer);
             tx.commit();
-            System.out.println("Done..Add new Real customer to DB");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -51,7 +49,7 @@ public class RealCustomerCRUD {
     public static RealCustomer getRealCustomerByNationalCode(String nationalCode) {
         RealCustomer realCustomer = null;
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
-        boolean find = true;
+        // boolean find = true;
         try {
 
             Transaction tx = session.beginTransaction();
@@ -61,7 +59,6 @@ public class RealCustomerCRUD {
                 if (realCustomerInList.getNationalCode().equals(nationalCode)) {
                     realCustomer = realCustomerInList;
                 }
-                System.out.println("NC:" + realCustomerInList.getNationalCode());
             }
             tx.commit();
 
@@ -70,6 +67,22 @@ public class RealCustomerCRUD {
         } finally {
             session.close();
             return realCustomer;
+        }
+    }
+
+    public static List searchRealCustomer(String hql) {
+        Session session = SessionFactoryUtil.getSessionFactory().openSession();
+        List results = null;
+        try {
+            Transaction tx = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            results = query.list();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+            return results;
         }
     }
 }

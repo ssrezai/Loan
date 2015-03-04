@@ -1,4 +1,4 @@
-package logic;
+package logic.exception;
 
 /**
  * Created by DOTIN SCHOOL 3 on 2/21/2015.

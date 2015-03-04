@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="logic">
     <class name="logic.Customer" table="customer">
-        <id name="customerID" type="int" column="customerId">
+        <id name="customerID" column="customerId">
             <generator class="native"/>
         </id>
         <joined-subclass name="logic.RealCustomer" table="real_customer">

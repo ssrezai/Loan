@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 <%--
   Created by IntelliJ IDEA.
   User: DOTIN SCHOOL 3
@@ -25,48 +27,40 @@
                     last_name == null || last_name == "" ||
                     father_name == null || father_name == "") {
                 alert("پر کردن تمام فیلدها اجباری است. مجددا تلاش نمایید.");
-                bool=false;
+                bool = false;
 
             }
-            else
-            {
-                var nationalCode= document.forms["insert_form"]["national_code"].value;
-                bool=checkNationalCodeDigitCount(nationalCode);
+            else {
+                var nationalCode = document.forms["insert_form"]["national_code"].value;
+                bool = checkNationalCodeDigitCount(nationalCode);
             }
             return bool;
         }
-        function checkNationalCodeDigitCount(nationalCode)
-        {
+        function checkNationalCodeDigitCount(nationalCode) {
             var bool;
-            if(isNaN(nationalCode)|| nationalCode.length!=10)
-            {
+            if (isNaN(nationalCode) || nationalCode.length != 10) {
                 alert("کد ملی 10 رقم دارد. مجددا تلاش نمایید.");
-                bool= false;
+                bool = false;
             }
-            else
-            {
-                bool=checkNationalCodeValidation(nationalCode);
+            else {
+                bool = checkNationalCodeValidation(nationalCode);
             }
             return bool;
         }
-        function checkNationalCodeValidation(nationalCode)
-        {
-            var sum=0;
-            for(var index=0;index<10;index++)
-            {
-                var position=index+1;
+        function checkNationalCodeValidation(nationalCode) {
+            var sum = 0;
+            for (var index = 0; index < 10; index++) {
+                var position = index + 1;
                 sum = sum + (Number(nationalCode.substr(index, 1)) * (position));
             }
-            var divisor=11;
-            var remaining=sum % divisor;
-            var rightDigit=Number(nationalCode.substr(10,1));
-            var rightDigitComplement= 11- rightDigit;
-            if(remaining==rightDigit||remaining==rightDigitComplement)
-            {
+            var divisor = 11;
+            var remaining = sum % divisor;
+            var rightDigit = Number(nationalCode.substr(10, 1));
+            var rightDigitComplement = 11 - rightDigit;
+            if (remaining == rightDigit || remaining == rightDigitComplement) {
                 return true;
             }
-            else
-            {
+            else {
                 alert("کد ملی وارد شده معتبر نیست");
                 return false;
             }
@@ -77,6 +71,8 @@
     <script src="../javaScripts/form-validation.js" type="text/javascript"></script>
 </head>
 <body>
+
+
 <div>
 
 <form name="insert_form" onsubmit="return formValidation()" action="/RealCustomerServlet" method="post">
@@ -232,7 +228,6 @@
 
 </form>
 
-
 <form name="search_form" action="/RealCustomerServlet" method="post">
     <fieldset dir="rtl">
         <legend> جستجوی مشتری حقیقی</legend>
@@ -279,6 +274,18 @@
 
     </fieldset>
 </form>
+<div>
+    <%--<p>--%>
+<%--<script>--%>
+    <%--<%=request.getAttribute("message")%>--%>
+    <%--<%String errorMessage= (String) request.getAttribute("error");%>--%>
+    <%--<% if(errorMessage.length()!=0)%>--%>
+   <%--window.alert("try again...")--%>
+<%--</script>--%>
+    <%--</p>--%>
+    <%--<c:remove var="message" scope="session"/>--%>
 </div>
+</div>
+
 </body>
 </html>
