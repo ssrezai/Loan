@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="logic">
+    <class name="logic.LoanType" table="loan_type">
+        <id name="loanTypeId" column="loan_type_id">
+            <generator class="native"/>
+        </id>
+        <property name="interestRate" column="interest_rate"/>
+        <property name="loanTypeName" column="loan_type_name"/>
+        <set name="grantConditions">
+            <key column="fk_loan_type_id"/>
+            <one-to-many class="logic.GrantCondition"/>
+        </set>
+      </class>
+
+    <class name="logic.GrantCondition" table="grant_condition">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+
+        <!--<one-to-one name="loanType" class="logic.LoanType" />-->
+        <!--<property name="loanTypeId" column="fk_loan_type_id"/>-->
+        <property name="loanType" column="fk_loan_type_id"/>
+        <property name="grantConditionName" column="name"/>
+        <property name="maxContractCost" column="max_contract_cost"/>
+        <property name="minContractCost" column="min_contract_cost"/>
+        <property name="maxContractDuration" column="max_contract_duration"/>
+        <property name="minContractDuration" column="min_contract_duration"/>
+     </class>
+
+    <class name="logic.LoanFile" table="loan_file">
+        <id name="id" column="loan_file_id">
+            <generator class="native"/>
+        </id>
+        <property name="contractCost" column="contract_cost"/>
+        <property name="contractDuration" column="contract_duration"/>
+        <many-to-one name="customer" class="logic.Customer" column="customerId" not-null="true"/>
+        <many-to-one name="loanType" column="loan_type_id" class="logic.LoanType" not-null="true"/>
+    </class>
+</hibernate-mapping>

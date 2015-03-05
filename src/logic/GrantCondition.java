@@ -9,9 +9,27 @@ public class GrantCondition {
     private String grantConditionName;
     private int minContractCost;
     private int maxContractCost;
+    private int id;
+    private int loanType;
+
+    public int getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(int loanType) {
+        this.loanType = loanType;
+    }
 
     public int getMinContractDuration() {
         return minContractDuration;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setMinContractDuration(int minContractDuration) {
