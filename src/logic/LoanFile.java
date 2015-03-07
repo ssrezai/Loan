@@ -12,6 +12,16 @@ public class LoanFile {
     private int contractDuration;
     private BigInteger contractCost;
 
+    public LoanFile(Customer customer, LoanType loanType, int contractDuration, BigInteger contractCost) {
+        this.customer = customer;
+        this.loanType = loanType;
+        this.contractDuration = contractDuration;
+        this.contractCost = contractCost;
+    }
+
+    public LoanFile() {
+    }
+
     public int getContractDuration() {
         return contractDuration;
     }

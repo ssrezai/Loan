@@ -15,16 +15,30 @@
     <title>
         عملیات تسهیلات بانکی
     </title>
+    <script>
+        function formValidation() {
+            var bool = true;
+            var loan_type_name = document.forms["loan_type_form"]["loan_type_name"].value;
+            var interest_rate = document.forms["loan_type_form"]["interest_rate"].value;
+            if (loan_type_name == null || loan_type_name == "" ||
+                    interest_rate == null || interest_rate == "" || isNaN(interest_rate)) {
+                alert("   فرمت اطلاعات وارد شده غلط است. ");
+                bool = false;
+
+            }
+            return bool;
+        }
+    </script>
 </head>
 <body>
 <div dir="rtl" style="margin-top: 150px">
-    <form>
+    <form name="loan_type_form" action="grant-condition.jsp" onsubmit="return formValidation()" method="post">
         <table>
             <label for="loan_type_name">
             </label>
             <tr>
                 <td>
-نام نوع تسهیلات
+                    نام نوع تسهیلات
                 </td>
                 <td style="margin-left: 10px">
 
@@ -35,7 +49,7 @@
             </tr>
             <tr>
                 <td>
-نرخ سود
+                    نرخ سود
                 </td>
                 <td>
 
@@ -46,13 +60,18 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="مرحله بعد">
+                    <input type="submit" name="submit" value="مرحله بعد">
                 </td>
             </tr>
 
         </table>
 
     </form>
+    <% if (request.getAttribute("error") != null) {%>
+    <script>
+        alert("اطلاعات وارد شده غلط است");
+    </script>
+    <%}%>
 </div>
 </body>
 </html>

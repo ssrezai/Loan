@@ -1,16 +1,30 @@
 package logic;
 
+import java.math.BigInteger;
+
 /**
  * Created by DOTIN SCHOOL 3 on 3/1/2015.
+ * @author Samira Rezaei
  */
 public class GrantCondition {
     private int minContractDuration;
     private int maxContractDuration;
     private String grantConditionName;
-    private int minContractCost;
-    private int maxContractCost;
+    private BigInteger minContractCost;
+    private BigInteger maxContractCost;
     private int id;
     private int loanType;
+
+    public GrantCondition(int minContractDuration, int maxContractDuration, String grantConditionName, BigInteger minContractCost, BigInteger maxContractCost) {
+        this.minContractDuration = minContractDuration;
+        this.maxContractDuration = maxContractDuration;
+        this.grantConditionName = grantConditionName;
+        this.minContractCost = minContractCost;
+        this.maxContractCost = maxContractCost;
+    }
+
+    public GrantCondition() {
+    }
 
     public int getLoanType() {
         return loanType;
@@ -52,19 +66,19 @@ public class GrantCondition {
         this.grantConditionName = grantConditionName;
     }
 
-    public int getMinContractCost() {
+    public BigInteger getMinContractCost() {
         return minContractCost;
     }
 
-    public void setMinContractCost(int minContractCost) {
+    public void setMinContractCost(BigInteger minContractCost) {
         this.minContractCost = minContractCost;
     }
 
-    public int getMaxContractCost() {
+    public BigInteger getMaxContractCost() {
         return maxContractCost;
     }
 
-    public void setMaxContractCost(int maxContractCost) {
+    public void setMaxContractCost(BigInteger maxContractCost) {
         this.maxContractCost = maxContractCost;
     }
 }
