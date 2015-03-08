@@ -3,13 +3,14 @@ package logic;
 import crud.LoanCRUD;
 
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by DOTIN SCHOOL 3 on 3/5/2015.
+ *
  * @author Samira Rezaei
- * Basic logic for Loan function is checked here....
+ *         Basic logic for Loan function is checked here....
  */
 public class LoanLogic {
 
@@ -44,13 +45,17 @@ public class LoanLogic {
     }
 
     public static void addLoanTypeWithGrantCondition(String loanTypeName, String interestRate,
-                                                     String minContractCost, String maxContractCost, String minContractDuration, String maxContractDuration, String name)
-    {
-        GrantCondition grantCondition= new GrantCondition(Integer.parseInt(minContractDuration),Integer.parseInt(maxContractDuration),name,new BigInteger(minContractCost),new BigInteger(maxContractCost));
-       LoanType loanType= new LoanType();
+                                                     String minContractCost, String maxContractCost, String minContractDuration, String maxContractDuration, String name) {
+        GrantCondition grantCondition = new GrantCondition(Integer.parseInt(minContractDuration), Integer.parseInt(maxContractDuration), name, new BigInteger(minContractCost), new BigInteger(maxContractCost));
+        LoanType loanType = new LoanType();
         loanType.setLoanTypeName(loanTypeName);
         loanType.setInterestRate(Integer.parseInt(interestRate));
-        LoanCRUD.addLoanType(loanTypeName,Integer.parseInt(interestRate),grantCondition);
+        LoanCRUD.updateLoanTypeTable(loanTypeName, Integer.parseInt(interestRate), grantCondition);
+    }
+
+    public static Set<GrantCondition> getTotalCondition(LoanType loanType)
+    {
+      return  LoanCRUD.getTotalSetOfConditions(loanType);
     }
 
 }

@@ -93,17 +93,15 @@
         <tr id="submit">
             <td>
                 <%
-                    //                    List loanTypeNames = LoanLogic.returnLoanTypeName();
-//                    Iterator iterator = loanTypeNames.iterator();
                     List loanTypes = LoanLogic.returnLoanType();
                     Iterator iterator = loanTypes.iterator();
                 %>
-                <select>
+                <select name="loan_type_name" id="loan_type_name">
                     <% while (iterator.hasNext()) {%>
                     <option>
                         <%
                             LoanType loanType = (LoanType) iterator.next();
-                            String str = loanType.getLoanTypeName() + "; " + loanType.getInterestRate() + "%";
+                            String str = loanType.getLoanTypeName() + " ; " + loanType.getInterestRate() + "%";
                         %>
                         <%--<%=iterator.next()%>--%>
                         <%=str%>

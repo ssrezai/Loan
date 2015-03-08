@@ -110,7 +110,7 @@ public class RealCustomerCRUD {
             e.printStackTrace();
         } finally {
             session.close();
-            return results;
         }
+        return results;
     }
 }

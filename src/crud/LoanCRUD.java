@@ -56,12 +56,6 @@ public class LoanCRUD {
         }
     }
 
-//
-//    public static List getAllGrantConditions(LoanType loanType) {
-//        List allGrantConditions = null;
-//
-//        return allGrantConditions;
-//    }
 
     public static void addNewGrantCondition(GrantCondition grantCondition) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
@@ -76,12 +70,7 @@ public class LoanCRUD {
         }
     }
 
-    //    public static void addLoanType(LoanType loanType, GrantCondition grantCondition) {
-//       Set conditionsSet= getTotalSetOfConditions(loanType);
-//        conditionsSet.add(grantCondition);
-////        loanType.setGrantConditions(grantCondition);
-//
-//    }
+
     public static int getLoanTypeId(String loanTypeName, int interestRate) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         List results = null;
@@ -127,69 +116,75 @@ public class LoanCRUD {
 
     }
 
-    public static void addLoanType(String loanTypeName, int interestRate, GrantCondition grantCondition) {
-        Session session = SessionFactoryUtil.getSessionFactory().openSession();
-        LoanType loanType = getLoanType(loanTypeName, interestRate);
-        Set grantConditions = null;
-        try {
+    public static void updateLoanTypeTable(String loanTypeName, int interestRate, GrantCondition grantCondition) {
 
+        LoanType loanType = getLoanType(loanTypeName, interestRate);
+        try {
             if (loanType != null) {
-                Transaction tx = session.beginTransaction();
                 int loanTypeId = loanType.getLoanTypeId();
-                grantConditions = getTotalSetOfConditions(loanType);
-                grantConditions.add(grantCondition);
-                loanType.setGrantConditions(grantConditions);
                 grantCondition.setLoanType(loanTypeId);
-                session.save(grantCondition);
-                tx.commit();
+                addNewGrantCondition(grantCondition);
 
             } else {
                 LoanType newLoanType = new LoanType();
-
-
                 try {
-                    Transaction tx = session.beginTransaction();
                     newLoanType.setInterestRate(interestRate);
                     newLoanType.setLoanTypeName(loanTypeName);
-                    grantConditions = new HashSet<GrantCondition>();
-                    grantConditions.add(grantCondition);
-                     newLoanType.setGrantConditions(grantConditions);
-                    session.save(newLoanType);
-                    //session.getTransaction().commit();
-                    tx.commit();
-                  //  session.beginTransaction();
+                    addNewLoanType(newLoanType);
                     LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
                     grantCondition.setLoanType(committedLoanType.getLoanTypeId());
-                    session.save(grantCondition);
-                   // session.getTransaction().commit();
+                    addNewGrantCondition(grantCondition);
                 } finally {
                     Set checkedList = getTotalSetOfConditions(newLoanType);
                     if (checkedList.size() == 0) {
-                        Transaction tx = session.beginTransaction();
-                        tx.begin();
-                        LoanType removableLoanType = (LoanType) session.get(LoanType.class, newLoanType.getLoanTypeId());
-                        session.delete(removableLoanType);
-                        tx.commit();
+                        deleteLoanTypeWithoutAnyCondition(newLoanType);
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+
+    public static void addNewLoanType(LoanType loanType) {
+        Session session = SessionFactoryUtil.getSessionFactory().openSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            session.save(loanType);
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             session.close();
-
         }
     }
 
-    public static Set getTotalSetOfConditions(LoanType loanType) {
+    public static void deleteLoanTypeWithoutAnyCondition(LoanType loanType) {
+        Session session = SessionFactoryUtil.getSessionFactory().openSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            LoanType removableLoanType = (LoanType) session.get(LoanType.class, loanType.getLoanTypeId());
+            session.delete(removableLoanType);
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public static Set<GrantCondition> getTotalSetOfConditions(LoanType loanType) {
         Set<GrantCondition> totalSetOfConditions = null;
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         try {
             Transaction tx = session.beginTransaction();
-            String hql = "FROM GrantCondition G WHERE G.loanType=" + loanType.getLoanTypeId();
+            LoanType loanTypeInDB=getLoanType(loanType.getLoanTypeName(),loanType.getInterestRate());
+            String hql = "FROM GrantCondition G WHERE G.loanType=" + loanTypeInDB.getLoanTypeId();
             Query query = session.createQuery(hql);
             List results = query.list();
-            // Set<Foo> foo = new HashSet<>(myList);
             totalSetOfConditions = new HashSet<GrantCondition>(results);
             tx.commit();
         } catch (Exception e) {

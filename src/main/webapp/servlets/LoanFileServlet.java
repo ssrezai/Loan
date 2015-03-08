@@ -1,5 +1,7 @@
 package main.webapp.servlets;
 
+import logic.LoanFileLogic;
+import logic.LoanType;
 import logic.RealCustomer;
 import logic.RealCustomerLogic;
 import logic.exception.InvalidCustomerId;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * Created by DOTIN SCHOOL 3 on 3/7/2015.
@@ -21,17 +24,21 @@ public class LoanFileServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
+
+
     }
 
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request != null) {
+            RealCustomer realCustomer=new RealCustomer();
             if (request.getParameter("search") != null) {
                 String id = request.getParameter("customer_id");
+
                 System.out.println(id);
                 try {
-                    RealCustomer realCustomer = RealCustomerLogic.getRealCustomerByCustomerID(id);
+                     realCustomer = RealCustomerLogic.getRealCustomerByCustomerID(id);
                     if (realCustomer != null) {
                         request.setAttribute("first_name", realCustomer.getFirstName());
                         request.setAttribute("last_name", realCustomer.getLastName());
@@ -55,6 +62,16 @@ public class LoanFileServlet extends HttpServlet {
                     request.setAttribute("error", "WRONG ID...try again...");
                     request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
                 } else {
+                    String loanType= request.getParameter("loan_type_name");
+                    String loanTypeName=loanType.substring(0, loanType.indexOf(";") - 1);
+                    int interestRate=Integer.parseInt(loanType.substring(loanType.indexOf(";") + 2, loanType.indexOf("%")));
+                    System.out.println(loanTypeName+interestRate);
+                    LoanType forwardedLoanType= new LoanType();
+                    forwardedLoanType.setInterestRate(interestRate);
+                    forwardedLoanType.setLoanTypeName(loanTypeName);
+                    BigInteger cost=new BigInteger(request.getParameter("contract_cost"));
+                    int duration=Integer.parseInt(request.getParameter("contract_duration"));
+                    LoanFileLogic.makeNewLoanFile(realCustomer,forwardedLoanType,duration,cost);
                     request.setAttribute("yes", "yes");
                     request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
 

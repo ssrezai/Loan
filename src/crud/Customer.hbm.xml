@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC
-        "-//Hibernate/Hibernate Mapping DTD//EN"
-        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        <!DOCTYPE hibernate-mapping PUBLIC
+                "-//Hibernate/Hibernate Mapping DTD//EN"
+                "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="logic">
-    <class name="logic.Customer" table="customer">
-        <id name="customerID" column="customerId">
-            <generator class="native"/>
-        </id>
-        <joined-subclass name="logic.RealCustomer" table="real_customer">
-            <key column="fk_customerId"></key>
+<class name="logic.Customer" table="customer">
+    <id name="customerID" column="customerId">
+        <generator class="native"/>
+    </id>
+    <joined-subclass name="logic.RealCustomer" table="real_customer">
+        <key column="fk_customerId"></key>
 
-            <property name="firstName" type="string" column="first_name"></property>
-            <property name="lastName" type="string" column="last_name"></property>
-            <property name="fatherName" type="string" column="father_name"></property>
-            <property name="birthDate" column="birth_date" type="string"></property>
-            <property name="nationalCode" column="national_code" type="string"></property>
-          </joined-subclass>
+        <property name="firstName" type="string" column="first_name"></property>
+        <property name="lastName" type="string" column="last_name"></property>
+        <property name="fatherName" type="string" column="father_name"></property>
+        <property name="birthDate" column="birth_date" type="string"></property>
+        <property name="nationalCode" column="national_code" type="string"></property>
+    </joined-subclass>
 
-    </class>
+</class>
 </hibernate-mapping>
