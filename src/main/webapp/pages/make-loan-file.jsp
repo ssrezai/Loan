@@ -67,9 +67,9 @@
             <% }%>
         </tr>
         <tr style="margin-top: 20px">
-           <td >
-               گام 2: انتخاب نوع تسهیلات
-           </td>
+            <td>
+                گام 2: انتخاب نوع تسهیلات
+            </td>
             <td></td>
             <td></td>
             <td></td>
@@ -97,13 +97,12 @@
                     Iterator iterator = loanTypes.iterator();
                 %>
                 <select name="loan_type_name" id="loan_type_name">
-                    <% while (iterator.hasNext()) {%>
-                    <option>
+                    <% while (iterator.hasNext()) {
+                        LoanType loanType = (LoanType) iterator.next();%>
+                    <option value="<%=loanType.getLoanTypeId()%>">
                         <%
-                            LoanType loanType = (LoanType) iterator.next();
                             String str = loanType.getLoanTypeName() + " ; " + loanType.getInterestRate() + "%";
                         %>
-                        <%--<%=iterator.next()%>--%>
                         <%=str%>
 
                         <% } %>
@@ -112,19 +111,23 @@
                 <%--<input type="" name="loan_type">--%>
             </td>
             <td>
-                <input type="text" name="contract_cost">
-            </td>
-            <td>
                 <input type="text" name="contract_duration">
             </td>
             <td>
+                <input type="text" name="contract_cost">
+            </td>
+            <td>
                 <input type="submit" name="submit" value="ثبت">
-                <% if (request.getAttribute("error") != null) {%>
-                <script> alert("نمیشه...");
+                <% if (request.getAttribute("CustomerIdError") != null) {%>
+                <script> alert("خطا!مجددا تلاش نمایید");
                 </script>
                 <%}%>
-                <% if (request.getAttribute("yes") != null) {%>
-                <script> alert(":دی  میشه");
+                <% if (request.getAttribute("GrantConditionError") != null) {%>
+                <script> alert("خطا! حدم تطابق تسهیلات درخواستی با شروط موجود");
+                </script>
+                <%}%>
+                <% if (request.getAttribute("successful") != null) {%>
+                <script> alert("اطلاعات با موفقیت ثبت شد");
                 </script>
                 <%}%>
             </td>

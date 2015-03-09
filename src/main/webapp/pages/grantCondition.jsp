@@ -173,6 +173,7 @@
                   method="get">
                 <input type="submit" value="ثبت نهایی">
                 <input name="list" id="list" type="hidden">
+                <%request.setCharacterEncoding("UTF-8");%>
                 <input type="hidden" value="<%=request.getParameter("loan_type_name")%>" name="loan_type_name">
                 <input type="hidden" value="<%=request.getParameter("interest_rate")%>" name="interest_rate">
             </form>

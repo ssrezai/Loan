@@ -4,6 +4,7 @@ import logic.LoanFile;
 import logic.LoanType;
 import logic.RealCustomer;
 import logic.SessionFactoryUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.math.BigInteger;
@@ -14,6 +15,7 @@ import java.math.BigInteger;
  * @author Samira Rezaei
  */
 public class LoanFileCRUD {
+    static final Logger logger = Logger.getLogger(LoanFileCRUD.class);
 
     public static void addNewLoanFile(RealCustomer realCustomer, LoanType loanType, int contractDuration, BigInteger contractCost) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
@@ -24,6 +26,7 @@ public class LoanFileCRUD {
             tx.commit();
         } finally {
             session.close();
+            logger.info("ADD NEW LOAN FILE TO LOAN_FILE TABLE");
         }
     }
 

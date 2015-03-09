@@ -3,6 +3,7 @@ package logic;
 import crud.LoanCRUD;
 
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,21 +45,21 @@ public class LoanLogic {
         return valid;
     }
 
-    public static void addLoanTypeWithGrantCondition(String loanTypeName, String interestRate,
-                                                     String minContractCost, String maxContractCost, String minContractDuration, String maxContractDuration, String name) {
-        GrantCondition grantCondition = new GrantCondition(Integer.parseInt(minContractDuration), Integer.parseInt(maxContractDuration), name, new BigInteger(minContractCost), new BigInteger(maxContractCost));
-        LoanType loanType = new LoanType();
-        loanType.setLoanTypeName(loanTypeName);
-        loanType.setInterestRate(Integer.parseInt(interestRate));
-        LoanCRUD.updateLoanTypeTable(loanTypeName, Integer.parseInt(interestRate), grantCondition);
-    }
+//    public static void addLoanTypeWithGrantCondition(String loanTypeName, String interestRate,
+//                                                     String minContractCost, String maxContractCost, String minContractDuration, String maxContractDuration, String name) {
+//        GrantCondition grantCondition = new GrantCondition(Integer.parseInt(minContractDuration), Integer.parseInt(maxContractDuration), name, new BigInteger(minContractCost), new BigInteger(maxContractCost));
+//        LoanType loanType = new LoanType();
+//        loanType.setLoanTypeName(loanTypeName);
+//        loanType.setInterestRate(Integer.parseInt(interestRate));
+//        LoanCRUD.updateLoanTypeTable(loanTypeName, Integer.parseInt(interestRate), grantCondition);
+//    }
 
-    public static void addLoanTypeWithGrantCondition2(String loanTypeName, String interestRate, Set<GrantCondition> conditionList) {
+    public static void addLoanTypeWithGrantCondition(String loanTypeName, String interestRate, Set conditionList) {
        // GrantCondition grantCondition = new GrantCondition(Integer.parseInt(minContractDuration), Integer.parseInt(maxContractDuration), name, new BigInteger(minContractCost), new BigInteger(maxContractCost));
         LoanType loanType = new LoanType();
         loanType.setLoanTypeName(loanTypeName);
         loanType.setInterestRate(Integer.parseInt(interestRate));
-        LoanCRUD.updateLoanTypeTable2(loanTypeName, Integer.parseInt(interestRate), conditionList);
+        LoanCRUD.updateLoanTypeTable(loanTypeName, Integer.parseInt(interestRate), conditionList);
     }
 
     public static Set<GrantCondition> getTotalCondition(LoanType loanType) {
@@ -92,9 +93,9 @@ public class LoanLogic {
 
     }
 
-    public static Set<GrantCondition> makeGrantCondition(String conditionList) {
+    public static Set makeGrantCondition(String conditionList) {
         String[] listOfConditions = splitConditionList(conditionList);
-        Set<GrantCondition> conditionSet = null;
+        Set conditionSet = new HashSet();
         for (int index = 0; index < listOfConditions.length; index++) {
             String[] condition = listOfConditions[index].split("/");
             String name = condition[0];

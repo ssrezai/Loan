@@ -3,6 +3,7 @@ package crud;
 import logic.GrantCondition;
 import logic.LoanType;
 import logic.SessionFactoryUtil;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -18,21 +19,23 @@ import java.util.Set;
  * @author Samira Rezaei
  */
 public class LoanCRUD {
+    static final Logger logger = Logger.getLogger(LoanCRUD.class);
+
 
     public static List getLoanTypeName() {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         List results = null;
         try {
-            Transaction tx = session.beginTransaction();
+        //    Transaction tx = session.beginTransaction();
             String hql = "SELECT L.loanTypeName FROM LoanType L";
             Query query = session.createQuery(hql);
             results = query.list();
-
-            tx.commit();
+          //  tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
+            logger.info("READ TOTAL LOAN_TYPE TABLE..1");
             return results;
         }
     }
@@ -42,16 +45,16 @@ public class LoanCRUD {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         List results = null;
         try {
-            Transaction tx = session.beginTransaction();
+           // Transaction tx = session.beginTransaction();
             String hql = "SELECT L FROM LoanType L";
             Query query = session.createQuery(hql);
             results = query.list();
-
-            tx.commit();
+           // tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
+            logger.info("READ TOTAL LOAN_TYPE TABLE..2");
             return results;
         }
     }
@@ -71,26 +74,17 @@ public class LoanCRUD {
     }
 
 
-    public static int getLoanTypeId(String loanTypeName, int interestRate) {
+    public static LoanType getLoanTypeId(int id) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
-        List results = null;
-        int id = -1;
-        try {
-            Transaction tx = session.beginTransaction();
-            String hql = " FROM LoanType L WHERE L.loanTypeName=" + loanTypeName + "AND L.interestRate=" + interestRate;
-            Query query = session.createQuery(hql);
-            results = query.list();
-            if (results != null) {
-                Iterator iterator = results.iterator();
-                LoanType loanType = (LoanType) iterator.next();
-                id = loanType.getLoanTypeId();
-            }
-            tx.commit();
+        LoanType loanType=null;
+        try{
+             loanType = (LoanType) session.get(LoanType.class,id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
-            return id;
+            logger.info("READ LOAN_TYPE TABLE BY ID..");
+            return loanType;
         }
 
     }
@@ -100,52 +94,53 @@ public class LoanCRUD {
         List loanTypeList = null;
         LoanType loanType = null;
         try {
-            Transaction tx = session.beginTransaction();
+            //Transaction tx = session.beginTransaction();
             String hql = " FROM LoanType L WHERE L.loanTypeName='" + loanTypeName + "' AND L.interestRate=" + interestRate;
             Query query = session.createQuery(hql);
             loanTypeList = query.list();
             Iterator iterator = loanTypeList.iterator();
             loanType = (LoanType) iterator.next();
-            tx.commit();
+           // tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
+            logger.info("READ LOAN_TYPE TABLE BY NAME & INTEREST_RATE..");
             return loanType;
         }
 
     }
 
-    public static void updateLoanTypeTable(String loanTypeName, int interestRate, GrantCondition grantCondition) {
-
-        LoanType loanType = getLoanType(loanTypeName, interestRate);
-        try {
-            if (loanType != null) {
-                int loanTypeId = loanType.getLoanTypeId();
-                grantCondition.setLoanType(loanTypeId);
-                addNewGrantCondition(grantCondition);
-
-            } else {
-                LoanType newLoanType = new LoanType();
-                try {
-                    newLoanType.setInterestRate(interestRate);
-                    newLoanType.setLoanTypeName(loanTypeName);
-                    addNewLoanType(newLoanType);
-                    LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
-                    grantCondition.setLoanType(committedLoanType.getLoanTypeId());
-                    addNewGrantCondition(grantCondition);
-                } finally {
-                    Set checkedList = getTotalSetOfConditions(newLoanType);
-                    if (checkedList.size() == 0) {
-                        deleteLoanTypeWithoutAnyCondition(newLoanType);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    public static void updateLoanTypeTable(String loanTypeName, int interestRate, GrantCondition grantCondition) {
+//
+//        LoanType loanType = getLoanType(loanTypeName, interestRate);
+//        try {
+//            if (loanType != null) {
+//                int loanTypeId = loanType.getLoanTypeId();
+//                grantCondition.setLoanType(loanTypeId);
+//                addNewGrantCondition(grantCondition);
+//
+//            } else {
+//                LoanType newLoanType = new LoanType();
+//                try {
+//                    newLoanType.setInterestRate(interestRate);
+//                    newLoanType.setLoanTypeName(loanTypeName);
+//                    addNewLoanType(newLoanType);
+//                    LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
+//                    grantCondition.setLoanType(committedLoanType.getLoanTypeId());
+//                    addNewGrantCondition(grantCondition);
+//                } finally {
+//                    Set checkedList = getTotalSetOfConditions(newLoanType);
+//                    if (checkedList.size() == 0) {
+//                        deleteLoanTypeWithoutAnyCondition(newLoanType);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
     public static void addNewLoanType(LoanType loanType) {
@@ -191,22 +186,25 @@ public class LoanCRUD {
             e.printStackTrace();
         } finally {
             session.close();
+            logger.info("RETURN TOTAL SET OF GRANT CONDITIONS..");
             return totalSetOfConditions;
         }
     }
 
 
-    public static void updateLoanTypeTable2(String loanTypeName, int interestRate, Set<GrantCondition> grantConditionSet) {
+    public static void updateLoanTypeTable(String loanTypeName, int interestRate, Set grantConditionSet) {
 
         LoanType loanType = getLoanType(loanTypeName, interestRate);
         try {
             if (loanType != null) {
                 int loanTypeId = loanType.getLoanTypeId();
                 Iterator iterator = grantConditionSet.iterator();
+                logger.info("UPDATE AN EXISTING LOAN TYPE..");
                 while (iterator.hasNext()) {
                     GrantCondition grantCondition = (GrantCondition) iterator.next();
                     grantCondition.setLoanType(loanTypeId);
                     addNewGrantCondition(grantCondition);
+                    logger.info("ADD NEW GRANT CONDITION FOR EXISTING LOAN TYPE..");
                 }
             } else {
                 LoanType newLoanType = new LoanType();
@@ -214,13 +212,21 @@ public class LoanCRUD {
                     newLoanType.setInterestRate(interestRate);
                     newLoanType.setLoanTypeName(loanTypeName);
                     addNewLoanType(newLoanType);
+                    logger.info("ADD NEW LOAN TYPE..");
                     LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
-                    grantCondition.setLoanType(committedLoanType.getLoanTypeId());
-                    addNewGrantCondition(grantCondition);
+                    Iterator iterator = grantConditionSet.iterator();
+                    while (iterator.hasNext()) {
+                        GrantCondition grantCondition = (GrantCondition) iterator.next();
+                        grantCondition.setLoanType(committedLoanType.getLoanTypeId());
+                        addNewGrantCondition(grantCondition);
+                        logger.info("ADD NEW GRANT CONDITION FOR NEW LOAN TYPE..");
+                    }
+
                 } finally {
                     Set checkedList = getTotalSetOfConditions(newLoanType);
                     if (checkedList.size() == 0) {
                         deleteLoanTypeWithoutAnyCondition(newLoanType);
+                        logger.info("DELETE A LOAN TYPE WITHOUT ANY CONDITION..");
                     }
                 }
             }

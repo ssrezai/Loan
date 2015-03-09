@@ -1,10 +1,10 @@
 package main.webapp.servlets;
 
 import logic.LoanFileLogic;
-import logic.LoanType;
 import logic.RealCustomer;
 import logic.RealCustomerLogic;
-import logic.exception.InvalidCustomerId;
+import logic.exception.InvalidCustomerIdException;
+import logic.exception.MismatchConditionException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +18,7 @@ import java.math.BigInteger;
  */
 public class LoanFileServlet extends HttpServlet {
     private int customerId = 0;
+    RealCustomer realCustomer= new RealCustomer();;
 
 
     @Override
@@ -32,7 +33,7 @@ public class LoanFileServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request != null) {
-            RealCustomer realCustomer=new RealCustomer();
+           // RealCustomer realCustomer=new RealCustomer();
             if (request.getParameter("search") != null) {
                 String id = request.getParameter("customer_id");
 
@@ -52,28 +53,29 @@ public class LoanFileServlet extends HttpServlet {
                     }
 
                     System.out.println(realCustomer.getFirstName() + " " + realCustomer.getLastName());
-                } catch (InvalidCustomerId e) {
+                } catch (InvalidCustomerIdException e) {
                     System.out.println("WRONG ID...try again...");
                     request.setAttribute("Invalid_error_msg", "WRONG ID...try again...");
                     request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
                 }
             } else if (request.getParameter("submit") != null) {
                 if (customerId == 0) {
-                    request.setAttribute("error", "WRONG ID...try again...");
+                    request.setAttribute("CustomerIdError", "WRONG ID...try again...");
                     request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
                 } else {
                     String loanType= request.getParameter("loan_type_name");
-                    String loanTypeName=loanType.substring(0, loanType.indexOf(";") - 1);
-                    int interestRate=Integer.parseInt(loanType.substring(loanType.indexOf(";") + 2, loanType.indexOf("%")));
-                    System.out.println(loanTypeName+interestRate);
-                    LoanType forwardedLoanType= new LoanType();
-                    forwardedLoanType.setInterestRate(interestRate);
-                    forwardedLoanType.setLoanTypeName(loanTypeName);
-                    BigInteger cost=new BigInteger(request.getParameter("contract_cost"));
+                     BigInteger cost=new BigInteger(request.getParameter("contract_cost"));
                     int duration=Integer.parseInt(request.getParameter("contract_duration"));
-                    LoanFileLogic.makeNewLoanFile(realCustomer,forwardedLoanType,duration,cost);
-                    request.setAttribute("yes", "yes");
-                    request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
+                    try {
+                        LoanFileLogic.makeNewLoanFile(realCustomer,Integer.parseInt(loanType),duration,cost);
+                        request.setAttribute("successful", "successful");
+                        request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
+                    } catch (MismatchConditionException e) {
+                        System.out.println("Mismatch Condition Exception");
+                        request.setAttribute("GrantConditionError", "WRONG ID...try again...");
+                        request.getRequestDispatcher("pages/make-loan-file.jsp").forward(request, response);
+                    }
+
 
                 }
             }

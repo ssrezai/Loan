@@ -2,7 +2,7 @@ package logic;
 
 import crud.RealCustomerCRUD;
 import logic.exception.DuplicateCustomerException;
-import logic.exception.InvalidCustomerId;
+import logic.exception.InvalidCustomerIdException;
 import logic.exception.InvalidNationalCodeException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +35,12 @@ public class RealCustomerLogic {
 
     }
 
-    public static boolean checkNationalCodeValidation(String nationalCode) {
+    public static boolean checkNationalCodeValidation(String nationalCode) throws InvalidNationalCodeException {
         boolean validate = true;
         if (nationalCode.equals("") || !nationalCode.matches("\\d{10}")) {
             validate = false;
+
+
         } else {
             int sum = 0;
             for (int index = 0; index < 9; index++) {
@@ -52,6 +54,9 @@ public class RealCustomerLogic {
             if (remaining == rightDigit || remaining == rightDigitComplement) {
                 return true;
             }
+        }
+        if (!validate) {
+            throw new InvalidNationalCodeException("invalid nc");
         }
         return validate;
     }
@@ -71,13 +76,13 @@ public class RealCustomerLogic {
         return customerId;
     }
 
-    public static RealCustomer getRealCustomerByCustomerID(String id) throws InvalidCustomerId {
+    public static RealCustomer getRealCustomerByCustomerID(String id) throws InvalidCustomerIdException {
         RealCustomer realCustomer = new RealCustomer();
         if (id.matches("\\d+")) {
             int customerId = Integer.parseInt(id);
-            realCustomer=  RealCustomerCRUD.getRealCustomerById(customerId);
+            realCustomer = RealCustomerCRUD.getRealCustomerById(customerId);
         } else {
-            throw new InvalidCustomerId("invalid id...");
+            throw new InvalidCustomerIdException("invalid id...");
         }
         return realCustomer;
     }
@@ -124,4 +129,28 @@ public class RealCustomerLogic {
 
     }
 
+    public static void deleteRealCustomer(String id) {
+        int customerId = Integer.parseInt(id);
+        RealCustomerCRUD.deleteRealCustomer(id);
+    }
+
+    public static boolean checkNationalCodeModification(RealCustomer realCustomer) throws DuplicateCustomerException {
+        boolean validate = false;
+        RealCustomer realCustomerFromDB = RealCustomerCRUD.getRealCustomerByNationalCode(realCustomer.getNationalCode());
+        if (realCustomerFromDB == null) {
+            validate = true;
+        } else {
+            if (realCustomerFromDB.getCustomerID().equals(realCustomer.getCustomerID())) {
+                validate = true;
+            } else {
+                validate = false;
+                throw new DuplicateCustomerException("");
+            }
+        }
+        return validate;
+    }
+    public static void updateRealCustomerInfo(RealCustomer realCustomer)
+    {
+        RealCustomerCRUD.updateRealCustomerTable(realCustomer);
+    }
 }

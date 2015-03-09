@@ -2,6 +2,7 @@ package logic;
 
 import crud.LoanCRUD;
 import crud.LoanFileCRUD;
+import logic.exception.MismatchConditionException;
 
 import java.math.BigInteger;
 import java.util.Iterator;
@@ -26,16 +27,19 @@ public class LoanFileLogic {
             BigInteger minContractCost = grantCondition.getMinContractCost();
             BigInteger maxContractCost = grantCondition.getMaxContractCost();
             if (contractDuration < maxContractDuration && contractDuration > minContractDuration
-                    && contractCost.compareTo(maxContractCost) <0  && contractCost.compareTo(minContractCost) >0 ) {
+                    && contractCost.compareTo(maxContractCost) < 0 && contractCost.compareTo(minContractCost) > 0) {
                 validate = true;
             }
         }
         return validate;
     }
 
-    public static void makeNewLoanFile(RealCustomer realCustomer, LoanType loanType, int contractDuration, BigInteger contractCost) {
+    public static void makeNewLoanFile(RealCustomer realCustomer, int id, int contractDuration, BigInteger contractCost) throws MismatchConditionException {
+        LoanType loanType = LoanCRUD.getLoanTypeId(id);
         if (checkContract(loanType, contractDuration, contractCost)) {
             LoanFileCRUD.addNewLoanFile(realCustomer, loanType, contractDuration, contractCost);
+        } else {
+            throw new MismatchConditionException("MismatchConditionException...");
         }
 
     }

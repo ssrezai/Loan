@@ -73,5 +73,16 @@
     </script>
     <%}%>
 </div>
+
+<%if(request.getAttribute("error")!=null){%>
+<script>
+    alert("اطلاعات وارد شده غلط است...");
+</script><%}%>
+
+<%if(request.getAttribute("successful")!=null){%>
+<script>
+    alert("اطلاعات با موفقیت ثبت شد.");
+</script>
+<%}%>
 </body>
 </html>

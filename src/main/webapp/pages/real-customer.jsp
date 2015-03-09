@@ -119,7 +119,7 @@
                 <td></td>
                 <td>
                     <select name="year" id="year" onchange="" size="1">
-                        <option value="1355">1355</option>
+                        <option value="13557777">1355</option>
                         <option value="1356">1356</option>
                         <option value="1357">1357</option>
                         <option value="1358">1358</option>
@@ -275,15 +275,21 @@
     </fieldset>
 </form>
 <div>
-    <%--<p>--%>
-<%--<script>--%>
-    <%--<%=request.getAttribute("message")%>--%>
-    <%--<%String errorMessage= (String) request.getAttribute("error");%>--%>
-    <%--<% if(errorMessage.length()!=0)%>--%>
-   <%--window.alert("try again...")--%>
-<%--</script>--%>
-    <%--</p>--%>
-    <%--<c:remove var="message" scope="session"/>--%>
+    <p>
+        <% if (request.getAttribute("InvalidNationalCodeException") != null) {%>
+        <script> alert("خطا! کدملی وارد شده نامعتبر است");
+        </script>
+        <%}%>
+        <% if (request.getAttribute("DuplicateCustomerException") != null) {%>
+        <script> alert("خطا! کدملی وارد شده تکراری است");
+        </script>
+        <%}%>
+        <% if (request.getAttribute("successfulUpdate") != null) {%>
+        <script> alert("اطلاعات با موفقیت بروزرسانی شد.");
+        </script>
+        <%}%>
+    </p>
+    <c:remove var="message" scope="session"/>
 </div>
 </div>
 
