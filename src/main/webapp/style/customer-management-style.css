@@ -14,3 +14,8 @@ div,fieldset {
     margin-left: 180px;
     text-align: center;
 }
+thead,tbody {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}

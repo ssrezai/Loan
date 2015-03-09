@@ -181,7 +181,7 @@ public class LoanCRUD {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         try {
             Transaction tx = session.beginTransaction();
-            LoanType loanTypeInDB=getLoanType(loanType.getLoanTypeName(),loanType.getInterestRate());
+            LoanType loanTypeInDB = getLoanType(loanType.getLoanTypeName(), loanType.getInterestRate());
             String hql = "FROM GrantCondition G WHERE G.loanType=" + loanTypeInDB.getLoanTypeId();
             Query query = session.createQuery(hql);
             List results = query.list();
@@ -193,7 +193,41 @@ public class LoanCRUD {
             session.close();
             return totalSetOfConditions;
         }
+    }
 
+
+    public static void updateLoanTypeTable2(String loanTypeName, int interestRate, Set<GrantCondition> grantConditionSet) {
+
+        LoanType loanType = getLoanType(loanTypeName, interestRate);
+        try {
+            if (loanType != null) {
+                int loanTypeId = loanType.getLoanTypeId();
+                Iterator iterator = grantConditionSet.iterator();
+                while (iterator.hasNext()) {
+                    GrantCondition grantCondition = (GrantCondition) iterator.next();
+                    grantCondition.setLoanType(loanTypeId);
+                    addNewGrantCondition(grantCondition);
+                }
+            } else {
+                LoanType newLoanType = new LoanType();
+                try {
+                    newLoanType.setInterestRate(interestRate);
+                    newLoanType.setLoanTypeName(loanTypeName);
+                    addNewLoanType(newLoanType);
+                    LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
+                    grantCondition.setLoanType(committedLoanType.getLoanTypeId());
+                    addNewGrantCondition(grantCondition);
+                } finally {
+                    Set checkedList = getTotalSetOfConditions(newLoanType);
+                    if (checkedList.size() == 0) {
+                        deleteLoanTypeWithoutAnyCondition(newLoanType);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
+
 }

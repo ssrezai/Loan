@@ -32,7 +32,7 @@
 </head>
 <body>
 <div dir="rtl" style="margin-top: 150px">
-    <form name="loan_type_form" action="grant-condition.jsp" onsubmit="return formValidation()" method="post">
+    <form name="loan_type_form" action="grantCondition.jsp" onsubmit="return formValidation()" method="post">
         <table>
             <label for="loan_type_name">
             </label>

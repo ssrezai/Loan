@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,16 +22,29 @@ public class LoanTypeServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       List myList= (List) request.getAttribute("list");
-//        for(int i=)
-        Iterator iterator= myList.iterator();
-        while(iterator.hasNext())
-        {
-            GrantCondition g= (GrantCondition) iterator.next();
-            System.out.println(g.getGrantConditionName());
+        if (request != null) {
+            String totalConditionList = request.getParameter("list");
+            System.out.println(totalConditionList);
+            if (LoanLogic.validateGrantConditionList(totalConditionList)) {
+                String loanTypeName = request.getParameter("loan_type_name");
+                String interestRate = request.getParameter("interest_rate");
+                LoanType loanType = new LoanType();
+                loanType.setLoanTypeName(loanTypeName);
+                loanType.setInterestRate(Integer.parseInt(interestRate));
+                Set<GrantCondition> conditionSet=LoanLogic.makeGrantCondition(totalConditionList);
+                System.out.println(loanTypeName);
+            }
+//            String[] conditionList = totalConditionList.split(",");
+//            for (int index = 0; index < conditionList.length; index++)
+//            {
+//                System.out.println(conditionList[index]);
+//                String [] list2= conditionList[index].split("/");
+//                for(int i=0;i<list2.length;i++)
+//                {
+//                    System.out.println(list2[i]);
+//                }
+//            }
         }
-
-
 
     }
 
