@@ -1,7 +1,8 @@
 package logic;
+
 /**
- *
- * Created by DOTIN SCHOOL 3 on 2/19/2015.
+ * @author Samira Rezaei
+ *         Created by DOTIN SCHOOL 3 on 2/19/2015.
  */
 public class RealCustomer extends Customer {
     private String firstName;

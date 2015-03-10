@@ -3,6 +3,7 @@ package logic;
 import crud.LoanCRUD;
 import crud.LoanFileCRUD;
 import logic.exception.MismatchConditionException;
+import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 import java.util.Iterator;
@@ -14,8 +15,10 @@ import java.util.Set;
  * @author Samira Rezaei
  */
 public class LoanFileLogic {
+    static final Logger logger = Logger.getLogger(LoanFileLogic.class);
 
-    public static boolean checkContract(LoanType loanType, int contractDuration, BigInteger contractCost) {
+
+    public static boolean checkContract(LoanType loanType, int contractDuration, BigInteger contractCost) throws MismatchConditionException {
         boolean validate = false;
         Set totalConditions = LoanCRUD.getTotalSetOfConditions(loanType);
         Iterator iterator = totalConditions.iterator();
@@ -31,6 +34,10 @@ public class LoanFileLogic {
                 validate = true;
             }
         }
+        if (!validate) {
+            logger.warn("Mismatch Condition Exception..There is not any condition that match with user defined condition");
+            throw new MismatchConditionException("MismatchConditionException");
+        }
         return validate;
     }
 
@@ -38,10 +45,7 @@ public class LoanFileLogic {
         LoanType loanType = LoanCRUD.getLoanTypeId(id);
         if (checkContract(loanType, contractDuration, contractCost)) {
             LoanFileCRUD.addNewLoanFile(realCustomer, loanType, contractDuration, contractCost);
-        } else {
-            throw new MismatchConditionException("MismatchConditionException...");
         }
-
     }
 
 }

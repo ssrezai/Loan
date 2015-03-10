@@ -4,6 +4,7 @@ import crud.RealCustomerCRUD;
 import logic.exception.DuplicateCustomerException;
 import logic.exception.InvalidCustomerIdException;
 import logic.exception.InvalidNationalCodeException;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -15,21 +16,28 @@ import java.util.List;
  * @author Samira Rezaei
  */
 public class RealCustomerLogic {
+    static final Logger logger = Logger.getLogger(RealCustomerLogic.class);
+
 
     public static boolean checkRealCustomerAdding(RealCustomer realCustomer) throws DuplicateCustomerException, InvalidNationalCodeException {
         boolean validate;
         if (checkNationalCodeValidation(realCustomer.getNationalCode())) {
-            if (RealCustomerCRUD.getRealCustomerByNationalCode(realCustomer.getNationalCode()) == null) {
+            RealCustomer realCustomerFromDB = RealCustomerCRUD.getRealCustomerByNationalCode(realCustomer.getNationalCode());
+            if (realCustomerFromDB == null) {
                 validate = true;
             } else {
-                validate = false;
-                throw new DuplicateCustomerException("Duplicate NC");
+                if (realCustomerFromDB.getCustomerID().equals(realCustomer.getCustomerID())) {
+                    validate = true;
+                } else {
+                    validate = false;
+                    logger.warn("Duplicate National Code Exception..");
+                    throw new DuplicateCustomerException("Duplicate NC");
+                }
             }
-
         } else {
             validate = false;
+            logger.warn("Invalid National Code Exception..");
             throw new InvalidNationalCodeException("Wrong NC");
-
         }
         return validate;
 
@@ -56,6 +64,7 @@ public class RealCustomerLogic {
             }
         }
         if (!validate) {
+            logger.warn("Invalid National Code Exception..");
             throw new InvalidNationalCodeException("invalid nc");
         }
         return validate;
@@ -82,6 +91,7 @@ public class RealCustomerLogic {
             int customerId = Integer.parseInt(id);
             realCustomer = RealCustomerCRUD.getRealCustomerById(customerId);
         } else {
+            logger.warn("Invalid Customer ID Exception..");
             throw new InvalidCustomerIdException("invalid id...");
         }
         return realCustomer;
@@ -119,18 +129,14 @@ public class RealCustomerLogic {
             count++;
         }
         return query;
-
     }
 
     public static List searchRealCustomer(HttpServletRequest request) {
         String query = buildQuery(request);
-        List result = RealCustomerCRUD.searchRealCustomer(query);
-        return result;
-
+        return RealCustomerCRUD.searchRealCustomer(query);
     }
 
     public static void deleteRealCustomer(String id) {
-        int customerId = Integer.parseInt(id);
         RealCustomerCRUD.deleteRealCustomer(id);
     }
 
@@ -144,13 +150,14 @@ public class RealCustomerLogic {
                 validate = true;
             } else {
                 validate = false;
+                logger.warn("Duplicate National Code Exception..");
                 throw new DuplicateCustomerException("");
             }
         }
         return validate;
     }
-    public static void updateRealCustomerInfo(RealCustomer realCustomer)
-    {
+
+    public static void updateRealCustomerInfo(RealCustomer realCustomer) {
         RealCustomerCRUD.updateRealCustomerTable(realCustomer);
     }
 }

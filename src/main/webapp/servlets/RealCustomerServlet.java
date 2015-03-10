@@ -4,6 +4,7 @@ import logic.RealCustomer;
 import logic.RealCustomerLogic;
 import logic.exception.DuplicateCustomerException;
 import logic.exception.InvalidNationalCodeException;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RealCustomerServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    static final Logger logger = Logger.getLogger(RealCustomerServlet.class);
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,11 +57,13 @@ public class RealCustomerServlet extends HttpServlet {
                 } catch (InvalidNationalCodeException e) {
                     request.setAttribute("InvalidNationalCodeException", "...InvalidNationalCodeException ...");
                     request.getRequestDispatcher("pages/real-customer.jsp").forward(request, response);
-                    System.out.println("InvalidNationalCodeException..");
+                    logger.info("Catch InvalidNationalCodeException");
+
                 } catch (DuplicateCustomerException e) {
                     request.setAttribute("DuplicateCustomerException", "...DuplicateCustomerException ...");
                     request.getRequestDispatcher("pages/real-customer.jsp").forward(request, response);
-                    System.out.println("DuplicateCustomerException..");
+                    logger.info("Catch DuplicateCustomerException");
+
                 }
             }
 
@@ -98,12 +101,12 @@ public class RealCustomerServlet extends HttpServlet {
                                 System.out.println("Done..");
                             }
                         } catch (InvalidNationalCodeException e) {
-                            request.setAttribute("error", "...InvalidNationalCodeException ...");
+                            request.setAttribute("InvalidNationalCodeException", "...InvalidNationalCodeException ...");
                             request.getRequestDispatcher("pages/real-customer.jsp").forward(request, response);
                             System.out.println("...InvalidNationalCodeException ...");
                         } catch (DuplicateCustomerException e) {
                             ////////////////////
-                            request.setAttribute("error", "...DuplicateCustomerException ...");
+                            request.setAttribute("DuplicateCustomerException", "...DuplicateCustomerException ...");
                             request.getRequestDispatcher("pages/real-customer.jsp").forward(request, response);
                             ///////////////////////////
                             System.out.println("...DuplicateCustomerException ...");
@@ -213,7 +216,7 @@ public class RealCustomerServlet extends HttpServlet {
                 "  #of search result:" + count + "\n" +
                 "  </p>\n" +
                 "  <p>\n" +
-                "   <a href=\"real-customer.jsp\">\n" +
+                "<a href=\"pages/real-customer.jsp\">" +
                 "            بازگشت به صفحه ی قبل\n" +
                 "  </a>\n" +
                 "  </p>\n" +

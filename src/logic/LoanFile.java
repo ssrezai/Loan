@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 /**
  * Created by DOTIN SCHOOL 3 on 3/1/2015.
+ * @author Samira Rezaei
  */
 public class LoanFile {
     private Customer customer;

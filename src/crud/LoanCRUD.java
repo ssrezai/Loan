@@ -22,34 +22,34 @@ public class LoanCRUD {
     static final Logger logger = Logger.getLogger(LoanCRUD.class);
 
 
-    public static List getLoanTypeName() {
-        Session session = SessionFactoryUtil.getSessionFactory().openSession();
-        List results = null;
-        try {
-        //    Transaction tx = session.beginTransaction();
-            String hql = "SELECT L.loanTypeName FROM LoanType L";
-            Query query = session.createQuery(hql);
-            results = query.list();
-          //  tx.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-            logger.info("READ TOTAL LOAN_TYPE TABLE..1");
-            return results;
-        }
-    }
+//    public static List getLoanTypeName() {
+//        Session session = SessionFactoryUtil.getSessionFactory().openSession();
+//        List results = null;
+//        try {
+//        //    Transaction tx = session.beginTransaction();
+//            String hql = "SELECT L.loanTypeName FROM LoanType L";
+//            Query query = session.createQuery(hql);
+//            results = query.list();
+//          //  tx.commit();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            session.close();
+//            logger.info("READ TOTAL LOAN_TYPE TABLE..1");
+//            return results;
+//        }
+//    }
 
 
     public static List getLoanTypes() {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         List results = null;
         try {
-           // Transaction tx = session.beginTransaction();
+            // Transaction tx = session.beginTransaction();
             String hql = "SELECT L FROM LoanType L";
             Query query = session.createQuery(hql);
             results = query.list();
-           // tx.commit();
+            // tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -76,9 +76,9 @@ public class LoanCRUD {
 
     public static LoanType getLoanTypeId(int id) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
-        LoanType loanType=null;
-        try{
-             loanType = (LoanType) session.get(LoanType.class,id);
+        LoanType loanType = null;
+        try {
+            loanType = (LoanType) session.get(LoanType.class, id);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -100,7 +100,7 @@ public class LoanCRUD {
             loanTypeList = query.list();
             Iterator iterator = loanTypeList.iterator();
             loanType = (LoanType) iterator.next();
-           // tx.commit();
+            // tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -110,38 +110,6 @@ public class LoanCRUD {
         }
 
     }
-
-//    public static void updateLoanTypeTable(String loanTypeName, int interestRate, GrantCondition grantCondition) {
-//
-//        LoanType loanType = getLoanType(loanTypeName, interestRate);
-//        try {
-//            if (loanType != null) {
-//                int loanTypeId = loanType.getLoanTypeId();
-//                grantCondition.setLoanType(loanTypeId);
-//                addNewGrantCondition(grantCondition);
-//
-//            } else {
-//                LoanType newLoanType = new LoanType();
-//                try {
-//                    newLoanType.setInterestRate(interestRate);
-//                    newLoanType.setLoanTypeName(loanTypeName);
-//                    addNewLoanType(newLoanType);
-//                    LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
-//                    grantCondition.setLoanType(committedLoanType.getLoanTypeId());
-//                    addNewGrantCondition(grantCondition);
-//                } finally {
-//                    Set checkedList = getTotalSetOfConditions(newLoanType);
-//                    if (checkedList.size() == 0) {
-//                        deleteLoanTypeWithoutAnyCondition(newLoanType);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
 
     public static void addNewLoanType(LoanType loanType) {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
@@ -215,11 +183,13 @@ public class LoanCRUD {
                     logger.info("ADD NEW LOAN TYPE..");
                     LoanType committedLoanType = getLoanType(loanTypeName, interestRate);
                     Iterator iterator = grantConditionSet.iterator();
-                    while (iterator.hasNext()) {
-                        GrantCondition grantCondition = (GrantCondition) iterator.next();
-                        grantCondition.setLoanType(committedLoanType.getLoanTypeId());
-                        addNewGrantCondition(grantCondition);
-                        logger.info("ADD NEW GRANT CONDITION FOR NEW LOAN TYPE..");
+                    if (iterator.hasNext()) {
+                        do {
+                            GrantCondition grantCondition = (GrantCondition) iterator.next();
+                            grantCondition.setLoanType(committedLoanType.getLoanTypeId());
+                            addNewGrantCondition(grantCondition);
+                            logger.info("ADD NEW GRANT CONDITION FOR NEW LOAN TYPE..");
+                        } while (iterator.hasNext());
                     }
 
                 } finally {

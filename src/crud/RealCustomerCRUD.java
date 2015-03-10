@@ -1,6 +1,5 @@
 package crud;
 
-import logic.LoanType;
 import logic.RealCustomer;
 import logic.SessionFactoryUtil;
 import org.apache.log4j.Logger;
@@ -43,15 +42,13 @@ public class RealCustomerCRUD {
         RealCustomer realCustomer = null;
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         try {
-            //    Transaction tx = session.beginTransaction();
-            Query query = session.createQuery("FROM  RealCustomer R  where R.nationalCode=" + nationalCode);
+            Query query = session.createQuery("FROM  RealCustomer R  where R.nationalCode='" + nationalCode + "'");
             List<RealCustomer> realCustomerList = query.list();
             for (RealCustomer realCustomerInList : realCustomerList) {
                 if (realCustomerInList.getNationalCode().equals(nationalCode)) {
                     realCustomer = realCustomerInList;
                 }
             }
-            //   tx.commit();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +64,6 @@ public class RealCustomerCRUD {
         List results = null;
         RealCustomer realCustomer = null;
         try {
-            // Transaction tx = session.beginTransaction();
             Query query = session.createQuery("FROM  RealCustomer R  where R.customerID='" + realCustomerId + "'");
             results = query.list();
             if (results.size() != 0) {
@@ -75,7 +71,6 @@ public class RealCustomerCRUD {
                 realCustomer = new RealCustomer();
                 realCustomer = (RealCustomer) iterator.next();
             }
-            //  tx.commit();
         } finally {
             session.close();
             logger.info("READ ONE REAL CUSTOMER BY CUSTOMER ID..");
@@ -88,10 +83,8 @@ public class RealCustomerCRUD {
         Session session = SessionFactoryUtil.getSessionFactory().openSession();
         List results = null;
         try {
-            //Transaction tx = session.beginTransaction();
             Query query = session.createQuery(hql);
             results = query.list();
-            // tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
