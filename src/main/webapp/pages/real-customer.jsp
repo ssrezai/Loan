@@ -260,7 +260,7 @@
             </tr>
             <tr>
                 <td><label for="search_customer_id">
-                    شماره حساب
+شماره مشتری
                 </label></td>
                 <td></td>
                 <td><input type="text" name="customer_id" id="search_customer_id"></td>

@@ -19,6 +19,7 @@
     </title>
 </head>
 <body>
+<div>
 <form dir="rtl" action="/LoanFileServlet" method="post">
     <table>
         <tr>
@@ -66,7 +67,13 @@
             </script>
             <% }%>
         </tr>
-        <tr style="margin-top: 20px">
+        <tr>
+            <td height="50"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>
                 گام 2: انتخاب نوع تسهیلات
             </td>
@@ -74,6 +81,7 @@
             <td></td>
             <td></td>
         </tr>
+
 
         <tr id="submitLabel">
             <td>
@@ -135,6 +143,6 @@
 
     </table>
 </form>
-
+</div>
 </body>
 </html>
